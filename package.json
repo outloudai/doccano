@@ -4,5 +4,8 @@
     },
     "scripts": {
         "heroku-postbuild": "sh tools/heroku.sh build"
+    },
+    "dependencies": {
+        "serv": "^0.2.4"
     }
 }

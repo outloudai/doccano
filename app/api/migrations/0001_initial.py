@@ -59,7 +59,14 @@ class Migration(migrations.Migration):
                 ('guideline', models.TextField(default='')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('project_type', models.CharField(choices=[('DocumentClassification', 'document classification'), ('SequenceLabeling', 'sequence labeling'), ('Seq2seq', 'sequence to sequence')], max_length=30)),
+                ('project_type', models.CharField(
+                    choices=[
+                        ('DocumentClassification', 'document classification'),
+                        ('SequenceLabeling', 'sequence labeling'),
+                        ('Seq2seq', 'sequence to sequence'),
+                        ('Speech2text', 'speech to text')
+                    ],
+                    max_length=30)),
                 ('randomize_document_order', models.BooleanField(default=False)),
                 ('collaborative_annotation', models.BooleanField(default=False)),
             ],

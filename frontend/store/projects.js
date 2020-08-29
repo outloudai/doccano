@@ -29,6 +29,8 @@ export const getters = {
       return 'seq_annotations__isnull'
     } else if (state.current.project_type === 'Seq2seq') {
       return 'seq2seq_annotations__isnull'
+    } else if (state.current.project_type === 'Speech2text') {
+      return 'speech2text_annotations__isnull'
     } else {
       return ''
     }
@@ -40,6 +42,8 @@ export const getters = {
       return 'sequence-labeling'
     } else if (state.current.project_type === 'Seq2seq') {
       return 'sequence-to-sequence'
+    } else if (state.current.project_type === 'Speech2text') {
+      return 'speech-to-text'
     } else {
       return ''
     }
@@ -147,6 +151,13 @@ export const getters = {
         json,
         excel
       ]
+    } else if (state.current.project_type === 'Speech2text') {
+      json.examples = [
+        '{"audio": "data:audio/mpeg;base64,...", "meta":{"filename": "a-story.mp3"}}',
+        '{"audio": "https://server.com/audio.ogg"}',
+        '{"audio": "data:audio/wav;base64,...", "transcription": "Once upon a time..."}'
+      ]
+      return [json]
     } else {
       return []
     }
@@ -211,6 +222,13 @@ export const getters = {
         csv,
         json
       ]
+    } else if (state.current.project_type === 'Speech2text') {
+      json.examples = [
+        '{"audio": "data:audio/mpeg;base64,...", "meta":{"filename": "a-story.mp3"}}',
+        '{"audio": "https://server.com/audio.ogg"}',
+        '{"audio": "data:audio/wav;base64,...", "transcription": "Once upon a time..."}'
+      ]
+      return [json]
     } else {
       return []
     }
