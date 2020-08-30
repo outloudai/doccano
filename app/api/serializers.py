@@ -1,3 +1,5 @@
+import os
+import base64
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
@@ -82,6 +84,23 @@ class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = ('id', 'text', 'annotations', 'meta', 'annotation_approver')
+
+
+class AudioSerializer(DocumentSerializer):
+    audio = serializers.SerializerMethodField()
+
+    def get_audio(self, instance):
+        path = os.path.join('audio', instance.text)
+        if os.path.exists(path):
+            with open(path, 'rb') as f:
+                bytes = base64.b64encode(f.read()).decode('utf-8')
+                uri = f'data:audio/wav;base64,{bytes}'
+                return uri
+        return ''
+
+    class Meta:
+        model = Document
+        fields = ('id', 'text', 'annotations', 'meta', 'audio', 'annotation_approver')
 
 
 class ApproverSerializer(DocumentSerializer):

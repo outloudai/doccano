@@ -20,7 +20,7 @@ from rest_framework_csv.renderers import CSVRenderer
 from .filters import DocumentFilter
 from .models import Project, Label, Document, RoleMapping, Role
 from .permissions import IsProjectAdmin, IsAnnotatorAndReadOnly, IsAnnotator, IsAnnotationApproverAndReadOnly, IsOwnAnnotation, IsAnnotationApprover
-from .serializers import ProjectSerializer, LabelSerializer, DocumentSerializer, UserSerializer, ApproverSerializer
+from .serializers import ProjectSerializer, LabelSerializer, DocumentSerializer, UserSerializer, ApproverSerializer, AudioSerializer
 from .serializers import ProjectPolymorphicSerializer, RoleMappingSerializer, RoleSerializer
 from .utils import CSVParser, ExcelParser, JSONParser, PlainTextParser, CoNLLParser, AudioParser, iterable_to_io
 from .utils import JSONLRenderer
@@ -175,6 +175,30 @@ class DocumentList(generics.ListCreateAPIView):
         else:
             queryset = queryset.order_by('id')
 
+        return queryset
+
+    def perform_create(self, serializer):
+        project = get_object_or_404(Project, pk=self.kwargs['project_id'])
+        serializer.save(project=project)
+
+
+class AudioList(generics.ListCreateAPIView):
+    serializer_class = AudioSerializer
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    search_fields = ('text', )
+    ordering_fields = ('created_at', 'updated_at', 'doc_annotations__updated_at',
+                       'seq_annotations__updated_at', 'seq2seq_annotations__updated_at')
+    filter_class = DocumentFilter
+    permission_classes = [IsAuthenticated & IsInProjectReadOnlyOrAdmin]
+
+    def get_queryset(self):
+        project = get_object_or_404(Project, pk=self.kwargs['project_id'])
+
+        queryset = project.documents
+        if project.randomize_document_order:
+            queryset = queryset.annotate(sort_id=F('id') % self.request.user.id).order_by('sort_id')
+        else:
+            queryset = queryset.order_by('id')
         return queryset
 
     def perform_create(self, serializer):

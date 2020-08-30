@@ -6,6 +6,7 @@ services:
     volumes:
       - .:/src
       - venv:/src/venv
+      - ./audio/:/audio:ro
     command: ["/src/app/tools/dev-django.sh", "0.0.0.0:8000"]
     environment:
       ADMIN_USERNAME: "admin"
