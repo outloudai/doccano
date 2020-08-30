@@ -6,6 +6,7 @@ services:
     command: ["/app/tools/run.sh"]
     volumes:
       - static_volume:/app/staticfiles
+      - ./audio/:/audio:ro
     environment:
       ADMIN_USERNAME: "admin"
       ADMIN_PASSWORD: "password"

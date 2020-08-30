@@ -10,7 +10,6 @@ from .views import AnnotationList, AnnotationDetail
 from .views import TextUploadAPI, TextDownloadAPI, CloudUploadAPI
 from .views import StatisticsAPI
 from .views import RoleMappingList, RoleMappingDetail, Roles
-from .views import AudioList
 
 urlpatterns = [
     path('health', Health.as_view(), name='health'),
@@ -48,8 +47,6 @@ urlpatterns = [
          RoleMappingList.as_view(), name='rolemapping_list'),
     path('projects/<int:project_id>/roles/<int:rolemapping_id>',
          RoleMappingDetail.as_view(), name='rolemapping_detail'),
-    path('projects/<int:project_id>/audio',
-         AudioList.as_view(), name='audio_list')
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'xml'])

@@ -8,7 +8,7 @@
         <audio
           ref="player"
           controls
-          v-bind:src="audioFile"
+          v-bind:src="currentDoc.audio"
           v-shortkey="{ playOrPauseAudio: ['p'] }"
           v-on:shortkey="playOrPauseAudio"
         />
@@ -48,9 +48,6 @@ export default {
     ...mapGetters('documents', ['currentDoc']),
     isReady() {
       return this.currentDoc && !this.loading
-    },
-    audioFile() {
-      return 'http://localhost:9001/' + this.currentDoc.text
     }
   },
 

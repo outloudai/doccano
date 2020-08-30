@@ -64,6 +64,7 @@ class LabelSerializer(serializers.ModelSerializer):
 class DocumentSerializer(serializers.ModelSerializer):
     annotations = serializers.SerializerMethodField()
     annotation_approver = serializers.SerializerMethodField()
+    audio = serializers.SerializerMethodField()
 
     def get_annotations(self, instance):
         request = self.context.get('request')
@@ -75,6 +76,20 @@ class DocumentSerializer(serializers.ModelSerializer):
             annotations = annotations.filter(user=request.user)
         serializer = serializer(annotations, many=True)
         return serializer.data
+    
+    def get_audio(self, instance):
+        if not isinstance(instance.project, Speech2textProject):
+            return None
+        if instance.text.startswith('data:audio/wav'):
+            return instance.text
+
+        path = os.path.join('audio', instance.text)
+        if os.path.exists(path):
+            with open(path, 'rb') as f:
+                bytes = base64.b64encode(f.read()).decode('utf-8')
+                uri = f'data:audio/wav;base64,{bytes}'
+                return uri
+        return None
 
     @classmethod
     def get_annotation_approver(cls, instance):
@@ -83,24 +98,7 @@ class DocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Document
-        fields = ('id', 'text', 'annotations', 'meta', 'annotation_approver')
-
-
-class AudioSerializer(DocumentSerializer):
-    audio = serializers.SerializerMethodField()
-
-    def get_audio(self, instance):
-        path = os.path.join('audio', instance.text)
-        if os.path.exists(path):
-            with open(path, 'rb') as f:
-                bytes = base64.b64encode(f.read()).decode('utf-8')
-                uri = f'data:audio/wav;base64,{bytes}'
-                return uri
-        return ''
-
-    class Meta:
-        model = Document
-        fields = ('id', 'text', 'annotations', 'meta', 'audio', 'annotation_approver')
+        fields = ('id', 'text', 'annotations', 'meta', 'annotation_approver', 'audio')
 
 
 class ApproverSerializer(DocumentSerializer):
