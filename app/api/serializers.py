@@ -83,7 +83,7 @@ class DocumentSerializer(serializers.ModelSerializer):
         if instance.text.startswith('data:audio/wav'):
             return instance.text
 
-        path = os.path.join('audio', instance.text)
+        path = os.path.join('/audio', instance.text)
         if os.path.exists(path):
             with open(path, 'rb') as f:
                 bytes = base64.b64encode(f.read()).decode('utf-8')

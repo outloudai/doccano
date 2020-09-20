@@ -9,6 +9,7 @@
 # Icon must end with two \r
 Icon
 audio
+docker-compose*
 
 # Thumbnails
 ._*
