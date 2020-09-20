@@ -7,10 +7,11 @@
       <v-card-text class="title">
         <audio
           ref="player"
+          v-shortkey="{ pn: ['f1'], pns: ['shift', 'f1'], rewind: ['f2'], rewinds: ['shift', 'f2'], ps: ['f3'], pss: ['shift', 'f3'], pf: ['f4'], pfs: ['shift', 'f4'] }"
           controls
-          v-bind:src="currentDoc.audio"
-          v-shortkey="{ playOrPauseAudio: ['p'] }"
-          v-on:shortkey="playOrPauseAudio"
+          controlsList="nodownload"
+          :src="currentDoc.audio"
+          @shortkey="playAudio"
         />
       </v-card-text>
     </v-card>
@@ -75,14 +76,36 @@ export default {
       }
       this.addAnnotation(payload)
     },
-    async playOrPauseAudio() {
+    async playAudio(event) {
       const player = this.$refs.player
-      if (this.isAudioPlaying) {
-        player.pause()
-        this.isAudioPlaying = false
-      } else {
+      const skey = event.srcKey
+      if (skey === 'pn' || skey === 'pf' || skey === 'ps') {
+        if (this.isAudioPlaying) {
+          player.pause()
+          player.playbackRate = 1.0
+          this.isAudioPlaying = false
+        } else {
+          if (skey === 'pf') {
+            player.playbackRate = 1.3
+          } else if (skey === 'ps') {
+            player.playbackRate = 0.6
+          }
+          await player.play()
+          this.isAudioPlaying = true
+        }
+      } else if (skey === 'pns' || skey === 'pfs' || skey === 'pss') {
+        if (skey === 'pfs') {
+          player.playbackRate = 1.3
+        } else if (skey === 'pss') {
+          player.playbackRate = 0.5
+        }
+        player.currentTime = 0.0
         await player.play()
         this.isAudioPlaying = true
+      } else if (skey === 'rewind') {
+        player.currentTime = player.currentTime - 1
+      } else if (skey === 'rewinds') {
+        player.currentTime = 0
       }
     }
   }
