@@ -7,7 +7,7 @@
       <v-card-text class="title">
         <audio
           ref="player"
-          v-shortkey="{ pn: ['f1'], pns: ['shift', 'f1'], rewind: ['f2'], rewinds: ['shift', 'f2'], ps: ['f3'], pss: ['shift', 'f3'], pf: ['f4'], pfs: ['shift', 'f4'] }"
+          v-shortkey="{ pn: ['f1'], pns: ['shift', 'f1'], rewindb: ['f2'], rewindf: ['shift', 'f2'], slower: ['f3'], faster: ['f4'] }"
           controls
           controlsList="nodownload"
           :src="currentDoc.audio"
@@ -79,33 +79,34 @@ export default {
     async playAudio(event) {
       const player = this.$refs.player
       const skey = event.srcKey
-      if (skey === 'pn' || skey === 'pf' || skey === 'ps') {
+      if (skey === 'pn') {
         if (this.isAudioPlaying) {
           player.pause()
-          player.playbackRate = 1.0
           this.isAudioPlaying = false
         } else {
-          if (skey === 'pf') {
-            player.playbackRate = 1.3
-          } else if (skey === 'ps') {
-            player.playbackRate = 0.6
-          }
           await player.play()
           this.isAudioPlaying = true
         }
-      } else if (skey === 'pns' || skey === 'pfs' || skey === 'pss') {
-        if (skey === 'pfs') {
-          player.playbackRate = 1.3
-        } else if (skey === 'pss') {
-          player.playbackRate = 0.5
-        }
+      } else if (skey === 'pns') {
         player.currentTime = 0.0
         await player.play()
         this.isAudioPlaying = true
-      } else if (skey === 'rewind') {
+      } else if (skey === 'slower') {
+        if (player.playbackRate > 1) {
+          player.playbackRate = 1.0
+        } else if (player.playbackRate > 0.9) {
+          player.playbackRate = 0.6
+        }
+      } else if (skey === 'faster') {
+        if (player.playbackRate < 0.9) {
+          player.playbackRate = 1.0
+        } else if (player.playbackRate < 1.1) {
+          player.playbackRate = 1.3
+        }
+      } else if (skey === 'rewindb') {
         player.currentTime = player.currentTime - 1
-      } else if (skey === 'rewinds') {
-        player.currentTime = 0
+      } else if (skey === 'rewindf') {
+        player.currentTime = player.currentTime + 1
       }
     }
   }
