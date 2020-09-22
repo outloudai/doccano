@@ -25,7 +25,7 @@
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
         <v-btn
-          v-shortkey.once="['arrowleft']"
+          v-shortkey.once="['pagedown']"
           :disabled="value===1"
           text
           fab
@@ -42,7 +42,7 @@
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
         <v-btn
-          v-shortkey.once="['arrowright']"
+          v-shortkey.once="['pageup']"
           :disabled="value===length || length===0"
           text
           fab
