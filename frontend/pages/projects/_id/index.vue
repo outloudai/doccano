@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      Welcome to doccano!
+      Welcome to outloud.ai
     </v-card-title>
     <v-stepper
       v-model="e6"
@@ -20,17 +20,6 @@
           {{ item.title }}
         </v-stepper-step>
         <v-stepper-content :step="index + 1">
-          <v-card
-            v-if="e6 === index + 1"
-            class="mb-12"
-            width="560"
-            height="315"
-          >
-            <youtube
-              ref="youtube"
-              :video-id="item.videoId"
-            />
-          </v-card>
           <v-btn
             color="primary mt-5"
             @click="next"

@@ -5,6 +5,8 @@
     :items="projects"
     :search="search"
     :loading="loading"
+    items-per-page=100
+    sort-by="name"
     loading-text="Loading... Please wait"
     item-key="id"
     show-select

@@ -7,7 +7,7 @@
       <v-card-text class="title">
         <audio
           ref="player"
-          v-shortkey="{ play: ['f1'], pause: ['f2'], playstart: ['shift', 'f1'], rewind: ['f3'], forward: ['f4'], normal: ['f8'], slow: ['f6'], fast: ['f7'] }"
+          v-shortkey="{ play: ['esc'], pause: ['f2'], playstart: ['shift', 'f1'], rewind: ['f3'], forward: ['f4'], normal: ['f8'], slow: ['f6'], fast: ['f7'] }"
           controls
           controlsList="nodownload"
           :src="currentDoc.audio"
